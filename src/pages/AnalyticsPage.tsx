@@ -148,8 +148,7 @@ const AnalyticsPage = () => {
               data={filteredData}
               type="line"
               color="#0EA5E9"
-              dataKey="clicks"
-              additionalDataKeys={["impressions"]}
+              additionalDataKeys={["clicks", "impressions"]}
             />
           </div>
         </TabsContent>
@@ -207,8 +206,7 @@ const AnalyticsPage = () => {
             data={filteredData}
             type="line"
             color="#F97316"
-            dataKey="engagement"
-            additionalDataKeys={["clicks"]}
+            additionalDataKeys={["clicks", "engagement"]}
           />
         </TabsContent>
         

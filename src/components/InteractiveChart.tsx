@@ -63,9 +63,12 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
   };
 
   // Function to handle chart point hover/click
-  const handlePointClick = (data: any, index: number) => {
-    setActivePoint(data);
-    console.log("Chart point clicked:", data);
+  // Updated to handle MouseEvent properly
+  const handlePointClick = (event: React.MouseEvent<SVGElement>, payload: any) => {
+    if (payload && payload.payload) {
+      setActivePoint(payload.payload);
+      console.log("Chart point clicked:", payload.payload);
+    }
   };
 
   // Custom Tooltip Component
