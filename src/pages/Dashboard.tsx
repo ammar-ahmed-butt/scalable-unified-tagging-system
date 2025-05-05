@@ -1,15 +1,14 @@
-
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import SearchTags from "@/components/SearchTags";
-import { DateRangePicker } from "@/components/DateRangePicker";
-import FilterTags from "@/components/FilterTags";
-import InteractiveChartWrapper from "@/components/InteractiveChartWrapper";
-import SpiderChart from "@/components/SpiderChart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import SearchTags from "../components/SearchTags";
+import { DateRangePicker } from "../components/DateRangePicker";
+import FilterTags from "../components/FilterTags";
+import InteractiveChartWrapper from "../components/InteractiveChartWrapper";
+import SpiderChart from "../components/SpiderChart";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 import { PlusCircle, TrendingUp, User, Calendar, Briefcase, Tag as TagIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 // Sample data for demonstration
 const generateChartData = (days: number) => {

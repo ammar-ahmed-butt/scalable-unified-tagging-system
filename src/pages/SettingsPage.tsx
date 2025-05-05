@@ -1,9 +1,8 @@
-
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,21 +11,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { Switch } from "../components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "../components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { toast } from "sonner";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "../contexts/ThemeContext";
 
 const profileFormSchema = z.object({
   username: z.string().min(2, {
