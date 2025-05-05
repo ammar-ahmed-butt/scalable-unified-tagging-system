@@ -1,4 +1,9 @@
+
 import React, { useState } from "react";
+import { DateRange } from "react-day-picker";
+import SearchTags from "@/components/SearchTags";
+import { DateRangePicker } from "@/components/DateRangePicker";
+import FilterTags from "@/components/FilterTags";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,7 +22,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Edit, File, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, File, MoreHorizontal, Tag as TagIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -29,6 +34,13 @@ import { cn } from "@/lib/utils";
 import TagManager from "@/components/TagManager";
 
 // Sample data for demonstration
+const availableTagsData = [
+  "JavaScript", "React", "CSS", "HTML", "TypeScript", 
+  "Node.js", "Python", "Design", "Productivity", "Tools",
+  "API", "Backend", "Frontend", "Mobile", "Web", "UI/UX",
+  "Database", "Performance", "Security", "DevOps"
+];
+
 const tagsData = [
   { 
     id: 1, 
@@ -39,7 +51,7 @@ const tagsData = [
     growth: "+12%", 
     type: "personal", 
     visibility: "private", 
-    createdBy: "Ammar Ahmed Butt", 
+    createdBy: "John Doe", 
     createdAt: "2023-04-15" 
   },
   { 
@@ -153,9 +165,23 @@ const tagsData = [
 ];
 
 const TagsPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(new Date().setDate(new Date().getDate() - 7)),
+    to: new Date()
+  });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<any>(null);
+  
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // In a real app, you would filter data based on the search query
+  };
+  
+  const handleDateRangeChange = (range: DateRange | undefined) => {
+    setDateRange(range);
+  };
 
   const handleEditTag = (tag: any) => {
     setSelectedTag(tag);
@@ -164,6 +190,24 @@ const TagsPage = () => {
   
   return (
     <div className="space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold tracking-tight">Tags</h1>
+        <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <SearchTags onSearch={handleSearch} placeholder="Search tags..." />
+          <div className="flex flex-wrap gap-3">
+            <FilterTags 
+              availableTags={availableTagsData}
+              selectedTags={selectedTags}
+              onTagsChange={setSelectedTags}
+            />
+            <DateRangePicker
+              dateRange={dateRange}
+              onDateRangeChange={handleDateRangeChange}
+            />
+          </div>
+        </div>
+      </div>
+      
       {selectedTags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <span className="text-sm font-medium text-muted-foreground">Active filters:</span>

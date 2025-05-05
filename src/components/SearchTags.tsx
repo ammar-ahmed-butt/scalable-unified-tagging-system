@@ -1,33 +1,34 @@
+
 import React, { useState } from "react";
 import { Search } from "lucide-react";
-import { cn } from "../lib/utils";
+import { Input } from "@/components/ui/input";
 
 interface SearchTagsProps {
   onSearch: (query: string) => void;
   placeholder?: string;
-  className?: string;
 }
 
-const SearchTags = ({ onSearch, placeholder = "Search tags...", className }: SearchTagsProps) => {
-  const [query, setQuery] = useState("");
+const SearchTags: React.FC<SearchTagsProps> = ({ 
+  onSearch,
+  placeholder = "Search..."
+}) => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQuery(value);
-    onSearch(value);
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    onSearch(query);
   };
 
   return (
-    <div className={cn("relative", className)}>
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <Search size={16} className="text-muted-foreground" />
-      </div>
-      <input
+    <div className="relative w-full max-w-md">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+      <Input
         type="text"
-        className="w-full py-2 pl-10 pr-4 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-input bg-background"
         placeholder={placeholder}
-        value={query}
-        onChange={handleChange}
+        value={searchQuery}
+        onChange={handleSearch}
+        className="pl-10 w-full bg-background border-border"
       />
     </div>
   );

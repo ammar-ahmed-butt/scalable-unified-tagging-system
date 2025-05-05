@@ -1,19 +1,17 @@
-import React, { useState, Suspense, lazy } from "react";
+
+import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import SearchTags from "../components/SearchTags";
-import { DateRangePicker } from "../components/DateRangePicker";
-import FilterTags from "../components/FilterTags";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { PlusCircle, Calendar, Tag as TagIcon } from "lucide-react";
-import { cn } from "../lib/utils";
+import SearchTags from "@/components/SearchTags";
+import { DateRangePicker } from "@/components/DateRangePicker";
+import FilterTags from "@/components/FilterTags";
+import InteractiveChartWrapper from "@/components/InteractiveChartWrapper";
+import SpiderChart from "@/components/SpiderChart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { PlusCircle, TrendingUp, User, Calendar, Briefcase, Tag as TagIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Lazy load heavy components
-const InteractiveChartWrapper = lazy(() => import("../components/InteractiveChartWrapper"));
-const SpiderChart = lazy(() => import("../components/SpiderChart"));
-
-// Sample data generation functions (unchanged)...
-
+// Sample data for demonstration
 const generateChartData = (days: number) => {
   const data = [];
   const today = new Date();
@@ -33,6 +31,7 @@ const generateChartData = (days: number) => {
   return data;
 };
 
+// Generate data for the weekly chart
 const generateWeeklyData = () => {
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   return days.map(day => ({
@@ -41,6 +40,7 @@ const generateWeeklyData = () => {
   }));
 };
 
+// Generate data for the monthly chart
 const generateMonthlyData = () => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return months.map(month => ({
@@ -49,6 +49,7 @@ const generateMonthlyData = () => {
   }));
 };
 
+// Generate data for the radar chart
 const generateRadarData = () => {
   const skills = [
     { name: 'JavaScript', value: 65 },
@@ -70,6 +71,7 @@ const availableTagsData = [
   "Database", "Performance", "Security", "DevOps"
 ];
 
+// Status metrics data
 const statusMetrics = [
   { name: "Total", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-primary/20 to-primary/10" },
   { name: "Prospect", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-prospect to-status-prospect/70" },
@@ -93,6 +95,7 @@ const Dashboard = () => {
   const [monthlyData] = useState(generateMonthlyData());
   const [radarData] = useState(generateRadarData());
   
+  // Filter data based on date range
   const filteredData = chartData.filter(item => {
     if (!dateRange?.from || !dateRange?.to) return true;
     return item.dateObj >= dateRange.from && item.dateObj <= dateRange.to;
@@ -100,6 +103,7 @@ const Dashboard = () => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    // In a real app, you would filter data based on the search query
   };
   
   const handleDateRangeChange = (range: DateRange | undefined) => {
@@ -189,41 +193,33 @@ const Dashboard = () => {
       </div>
       
       <div className="grid gap-6 md:grid-cols-2">
-        <Suspense fallback={<div>Loading Website Views Chart...</div>}>
-          <InteractiveChartWrapper 
-            title="Website Views"
-            data={weeklyData}
-            type="bar"
-          />
-        </Suspense>
-        <Suspense fallback={<div>Loading Completed Tasks Chart...</div>}>
-          <InteractiveChartWrapper 
-            title="Completed Tasks"
-            data={monthlyData}
-            type="line"
-          />
-        </Suspense>
+        <InteractiveChartWrapper 
+          title="Website Views"
+          data={weeklyData}
+          type="bar"
+        />
+        <InteractiveChartWrapper 
+          title="Completed Tasks"
+          data={monthlyData}
+          type="line"
+        />
       </div>
       
       <div className="grid gap-6 md:grid-cols-2">
         <div className="col-span-1 md:col-span-1">
-          <Suspense fallback={<div>Loading Tag Engagement Chart...</div>}>
-            <InteractiveChartWrapper 
-              title="Tag Engagement Over Time"
-              data={filteredData}
-              type="area"
-              additionalDataKeys={["engagement"]}
-              className="h-full"
-            />
-          </Suspense>
+          <InteractiveChartWrapper 
+            title="Tag Engagement Over Time"
+            data={filteredData}
+            type="area"
+            additionalDataKeys={["engagement"]}
+            className="h-full"
+          />
         </div>
         <div className="col-span-1 md:col-span-1">
-          <Suspense fallback={<div>Loading Most Used Tags Chart...</div>}>
-            <SpiderChart 
-              title="Most Used Tags"
-              data={radarData}
-            />
-          </Suspense>
+          <SpiderChart 
+            title="Most Used Tags"
+            data={radarData}
+          />
         </div>
       </div>
 
