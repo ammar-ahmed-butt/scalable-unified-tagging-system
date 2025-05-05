@@ -42,7 +42,6 @@ const Sidebar = () => {
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: Home },
-    { path: "/analytics", label: "Analytics", icon: BarChart2 },
     { path: "/tags", label: "Tags", icon: Tag },
     { path: "/calendar", label: "Calendar", icon: Calendar },
     { path: "/jobs", label: "Job Portal", icon: Briefcase },
@@ -58,7 +57,7 @@ const Sidebar = () => {
   return (
     <div
       className={cn(
-        "h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col z-40 fixed md:relative",
+        "h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col z-40 fixed md:sticky top-0 left-0",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -164,16 +163,16 @@ const Sidebar = () => {
                       "h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary",
                       collapsed ? "mx-auto" : ""
                     )}>
-                      <span className="text-sm font-medium">JD</span>
+                      <span className="text-sm font-medium">AA</span>
                     </div>
                   </TooltipTrigger>
                   {collapsed && (
                     <TooltipContent side="right">
-                      John Doe
+                      Ammar Ahmed Butt
                     </TooltipContent>
                   )}
                 </Tooltip>
-                {!collapsed && <span className="ml-3 text-sm font-medium">John Doe</span>}
+                {!collapsed && <span className="ml-3 text-sm font-medium">Ammar Ahmed Butt</span>}
               </div>
             </div>
           </TooltipProvider>

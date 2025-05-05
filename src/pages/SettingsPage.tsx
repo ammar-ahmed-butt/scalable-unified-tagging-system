@@ -26,6 +26,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const profileFormSchema = z.object({
   username: z.string().min(2, {
@@ -51,11 +52,13 @@ const appearanceFormSchema = z.object({
 });
 
 const SettingsPage = () => {
+  const { theme, fontSize, colorScheme, setTheme, setFontSize, setColorScheme } = useTheme();
+
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      username: "user123",
-      email: "user@example.com",
+      username: "Ammar",
+      email: "ammar@example.com",
       bio: "Tag enthusiast and data explorer.",
     },
   });
@@ -73,9 +76,9 @@ const SettingsPage = () => {
   const appearanceForm = useForm<z.infer<typeof appearanceFormSchema>>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues: {
-      theme: "system",
-      fontSize: "md",
-      colorScheme: "default",
+      theme,
+      fontSize,
+      colorScheme,
     },
   });
 
@@ -92,6 +95,10 @@ const SettingsPage = () => {
   }
 
   function onAppearanceSubmit(data: z.infer<typeof appearanceFormSchema>) {
+    setTheme(data.theme);
+    setFontSize(data.fontSize);
+    setColorScheme(data.colorScheme);
+    
     toast.success("Appearance settings updated", {
       description: "Your appearance preferences have been saved.",
     });
@@ -372,7 +379,7 @@ const SettingsPage = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="default">Default</SelectItem>
+                            <SelectItem value="default">Default (Teal)</SelectItem>
                             <SelectItem value="purple">Purple</SelectItem>
                             <SelectItem value="blue">Blue</SelectItem>
                             <SelectItem value="green">Green</SelectItem>

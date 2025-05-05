@@ -4,7 +4,8 @@ import { DateRange } from "react-day-picker";
 import SearchTags from "@/components/SearchTags";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import FilterTags from "@/components/FilterTags";
-import InteractiveChart from "@/components/InteractiveChart";
+import InteractiveChartWrapper from "@/components/InteractiveChartWrapper";
+import SpiderChart from "@/components/SpiderChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, TrendingUp, User, Calendar, Briefcase, Tag as TagIcon } from "lucide-react";
@@ -51,18 +52,14 @@ const generateMonthlyData = () => {
 // Generate data for the radar chart
 const generateRadarData = () => {
   const skills = [
-    { name: 'MEAN', value: 38 },
-    { name: 'MERN', value: 52 },
-    { name: 'MEVN', value: 61 },
-    { name: 'PERN', value: 45 },
-    { name: 'LAMP', value: 30 },
-    { name: 'Flutter', value: 42 },
-    { name: 'ROR', value: 35 },
-    { name: 'JAVA', value: 48 },
-    { name: 'React Native', value: 65 },
-    { name: 'Serverless', value: 39 },
-    { name: 'DevOps', value: 55 },
-    { name: 'Python', value: 63 }
+    { name: 'JavaScript', value: 65 },
+    { name: 'React', value: 59 },
+    { name: 'TypeScript', value: 80 },
+    { name: 'CSS', value: 41 },
+    { name: 'Node.js', value: 56 },
+    { name: 'Python', value: 48 },
+    { name: 'Design', value: 35 },
+    { name: 'Productivity', value: 62 }
   ];
   return skills;
 };
@@ -196,29 +193,34 @@ const Dashboard = () => {
       </div>
       
       <div className="grid gap-6 md:grid-cols-2">
-        <InteractiveChart 
+        <InteractiveChartWrapper 
           title="Website Views"
           data={weeklyData}
           type="bar"
-          color="#0ea5e9"
         />
-        <InteractiveChart 
+        <InteractiveChartWrapper 
           title="Completed Tasks"
           data={monthlyData}
           type="line"
-          color="#0ea5e9"
         />
       </div>
       
-      <div className="grid gap-6 grid-cols-1">
-        <InteractiveChart 
-          title="Tag Engagement Over Time"
-          data={filteredData}
-          type="area"
-          color="#0ea5e9"
-          additionalDataKeys={["engagement"]}
-          className="h-full"
-        />
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="col-span-1 md:col-span-1">
+          <InteractiveChartWrapper 
+            title="Tag Engagement Over Time"
+            data={filteredData}
+            type="area"
+            additionalDataKeys={["engagement"]}
+            className="h-full"
+          />
+        </div>
+        <div className="col-span-1 md:col-span-1">
+          <SpiderChart 
+            title="Most Used Tags"
+            data={radarData}
+          />
+        </div>
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
