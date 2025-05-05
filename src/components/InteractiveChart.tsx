@@ -1,186 +1,291 @@
 
 import React, { useState } from "react";
 import {
-  ResponsiveContainer,
-  LineChart,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
   Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Download, PlusCircle, BarChart2, LineChart as LineChartIcon, PieChart as PieChartIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ChartData {
   name: string;
   value: number;
-  [key: string]: string | number;
+  [key: string]: any;
 }
 
 interface InteractiveChartProps {
   title: string;
   data: ChartData[];
-  type?: "line" | "area" | "bar";
+  type?: "area" | "bar" | "line" | "pie";
   color?: string;
-  secondaryColor?: string;
-  dataKey?: string;
   additionalDataKeys?: string[];
+  showLegend?: boolean;
   className?: string;
 }
 
-const InteractiveChart = ({
+const InteractiveChart: React.FC<InteractiveChartProps> = ({
   title,
   data,
   type = "line",
-  color = "#8B5CF6",
-  secondaryColor = "#D6BCFA",
-  dataKey = "value",
+  color = "#0ea5e9",
   additionalDataKeys = [],
-  className,
-}: InteractiveChartProps) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  showLegend = true,
+  className
+}) => {
+  const [chartType, setChartType] = useState<"area" | "bar" | "line" | "pie">(type);
+  const [activePoint, setActivePoint] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleMouseEnter = (data: any, index: number) => {
-    setActiveIndex(index);
+  // Colors for multiple data series
+  const colors = ["#0ea5e9", "#10b981", "#8b5cf6", "#f97316", "#ec4899"];
+
+  // Dummy function to simulate data refresh
+  const refreshData = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
-  const handleMouseLeave = () => {
-    setActiveIndex(null);
+  // Function to handle chart point hover/click
+  const handlePointClick = (data: any, index: number) => {
+    setActivePoint(data);
+    console.log("Chart point clicked:", data);
   };
 
+  // Custom Tooltip Component
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background/90 backdrop-blur-sm border border-border p-2 rounded shadow-md text-sm">
+          <p className="font-medium">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }}>
+              {entry.name}: {entry.value}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Render the appropriate chart based on chartType
   const renderChart = () => {
-    const commonProps = {
-      data,
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
-    };
-
-    switch (type) {
+    switch (chartType) {
       case "area":
         return (
-          <AreaChart {...commonProps}>
-            <defs>
-              <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.8} />
-                <stop offset="95%" stopColor={color} stopOpacity={0.1} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                border: "none",
-              }}
-            />
-            <Area
-              type="monotone"
-              dataKey={dataKey}
-              stroke={color}
-              fill="url(#colorGradient)"
-              activeDot={{ r: 8 }}
-            />
-            {additionalDataKeys.map((key, index) => (
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={color} stopOpacity={0.8} />
+                  <stop offset="95%" stopColor={color} stopOpacity={0.1} />
+                </linearGradient>
+                {additionalDataKeys.map((key, index) => (
+                  <linearGradient key={key} id={`color${key}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={colors[index % colors.length]} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={colors[index % colors.length]} stopOpacity={0.1} />
+                  </linearGradient>
+                ))}
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
+              <XAxis dataKey="name" className="text-xs text-muted-foreground" />
+              <YAxis className="text-xs text-muted-foreground" />
+              <Tooltip content={<CustomTooltip />} />
+              {showLegend && <Legend />}
               <Area
-                key={key}
                 type="monotone"
-                dataKey={key}
-                stroke={secondaryColor}
-                fill={secondaryColor}
-                fillOpacity={0.3}
-                activeDot={{ r: 8 }}
+                dataKey="value"
+                stroke={color}
+                fillOpacity={1}
+                fill="url(#colorValue)"
+                activeDot={{ onClick: handlePointClick, r: 6 }}
               />
-            ))}
-          </AreaChart>
+              {additionalDataKeys.map((key, index) => (
+                <Area
+                  key={key}
+                  type="monotone"
+                  dataKey={key}
+                  stroke={colors[index % colors.length]}
+                  fillOpacity={1}
+                  fill={`url(#color${key})`}
+                  activeDot={{ onClick: handlePointClick, r: 6 }}
+                />
+              ))}
+            </AreaChart>
+          </ResponsiveContainer>
         );
       case "bar":
         return (
-          <BarChart {...commonProps}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                border: "none",
-              }}
-            />
-            <Bar
-              dataKey={dataKey}
-              fill={color}
-              radius={[4, 4, 0, 0]}
-              barSize={30}
-            />
-            {additionalDataKeys.map((key, index) => (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
+              <XAxis dataKey="name" className="text-xs text-muted-foreground" />
+              <YAxis className="text-xs text-muted-foreground" />
+              <Tooltip content={<CustomTooltip />} />
+              {showLegend && <Legend />}
               <Bar
-                key={key}
-                dataKey={key}
-                fill={secondaryColor}
+                dataKey="value"
+                fill={color}
                 radius={[4, 4, 0, 0]}
-                barSize={30}
+                onClick={handlePointClick}
               />
-            ))}
-          </BarChart>
+              {additionalDataKeys.map((key, index) => (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  fill={colors[index % colors.length]}
+                  radius={[4, 4, 0, 0]}
+                  onClick={handlePointClick}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        );
+      case "pie":
+        return (
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={2}
+                dataKey="value"
+                onClick={handlePointClick}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                    className="stroke-background"
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              {showLegend && <Legend />}
+            </PieChart>
+          </ResponsiveContainer>
         );
       case "line":
       default:
         return (
-          <LineChart {...commonProps}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                border: "none",
-              }}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey={dataKey}
-              stroke={color}
-              activeDot={{ r: 8 }}
-              strokeWidth={2}
-            />
-            {additionalDataKeys.map((key, index) => (
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
+              <XAxis dataKey="name" className="text-xs text-muted-foreground" />
+              <YAxis className="text-xs text-muted-foreground" />
+              <Tooltip content={<CustomTooltip />} />
+              {showLegend && <Legend />}
               <Line
-                key={key}
                 type="monotone"
-                dataKey={key}
-                stroke={secondaryColor}
-                activeDot={{ r: 6 }}
+                dataKey="value"
+                stroke={color}
+                activeDot={{ onClick: handlePointClick, r: 6 }}
                 strokeWidth={2}
               />
-            ))}
-          </LineChart>
+              {additionalDataKeys.map((key, index) => (
+                <Line
+                  key={key}
+                  type="monotone"
+                  dataKey={key}
+                  stroke={colors[index % colors.length]}
+                  activeDot={{ onClick: handlePointClick, r: 6 }}
+                  strokeWidth={2}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         );
     }
   };
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className={cn("chart-card overflow-hidden", className)}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-lg font-medium">{title}</CardTitle>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "h-8 w-8",
+              chartType === "line" && "bg-muted text-muted-foreground"
+            )}
+            onClick={() => setChartType("line")}
+            title="Line Chart"
+          >
+            <LineChartIcon size={16} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "h-8 w-8",
+              chartType === "bar" && "bg-muted text-muted-foreground"
+            )}
+            onClick={() => setChartType("bar")}
+            title="Bar Chart"
+          >
+            <BarChart2 size={16} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "h-8 w-8",
+              chartType === "area" && "bg-muted text-muted-foreground"
+            )}
+            onClick={() => setChartType("area")}
+            title="Area Chart"
+          >
+            <PieChartIcon size={16} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={refreshData}
+            disabled={isLoading}
+            title="Refresh Data"
+          >
+            <RefreshCw size={16} className={cn(isLoading && "animate-spin")} />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            {renderChart()}
-          </ResponsiveContainer>
-        </div>
+        {renderChart()}
+        
+        {activePoint && (
+          <div className="mt-2 p-2 bg-muted/50 rounded text-sm">
+            <p className="font-medium">{activePoint.name}</p>
+            <p>Value: {activePoint.value}</p>
+            {additionalDataKeys.map(key => 
+              activePoint[key] !== undefined && (
+                <p key={key}>{key}: {activePoint[key]}</p>
+              )
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

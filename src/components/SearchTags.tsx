@@ -5,9 +5,13 @@ import { Input } from "@/components/ui/input";
 
 interface SearchTagsProps {
   onSearch: (query: string) => void;
+  placeholder?: string;
 }
 
-const SearchTags: React.FC<SearchTagsProps> = ({ onSearch }) => {
+const SearchTags: React.FC<SearchTagsProps> = ({ 
+  onSearch,
+  placeholder = "Search..."
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,10 +25,10 @@ const SearchTags: React.FC<SearchTagsProps> = ({ onSearch }) => {
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
       <Input
         type="text"
-        placeholder="Search tags..."
+        placeholder={placeholder}
         value={searchQuery}
         onChange={handleSearch}
-        className="pl-10 w-full"
+        className="pl-10 w-full bg-background border-border"
       />
     </div>
   );

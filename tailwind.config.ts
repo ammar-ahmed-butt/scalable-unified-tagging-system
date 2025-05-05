@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,24 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				tag: {
+					blue: "#E5F5FB",
+					green: "#E5F9F6",
+					purple: "#F1EFFC",
+					yellow: "#FEF7CD",
+					red: "#FFDEE2",
+					orange: "#FDE1D3",
+					gray: "#F1F0FB",
+				},
+				status: {
+					prospect: "#FAF8EB",
+					cold: "#E5F5FB",
+					warm: "#FEF7E7",
+					hot: "#FDE1D3",
+					rejected: "#FFDEE2",
+					hired: "#E5F9F6",
+					closed: "#FFEBEB",
 				}
 			},
 			borderRadius: {
@@ -94,3 +113,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

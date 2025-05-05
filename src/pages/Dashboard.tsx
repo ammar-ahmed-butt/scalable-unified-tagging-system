@@ -7,6 +7,8 @@ import FilterTags from "@/components/FilterTags";
 import InteractiveChart from "@/components/InteractiveChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PlusCircle, TrendingUp, User, Calendar, Briefcase, Tag as TagIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Sample data for demonstration
 const generateChartData = (days: number) => {
@@ -28,11 +30,60 @@ const generateChartData = (days: number) => {
   return data;
 };
 
+// Generate data for the weekly chart
+const generateWeeklyData = () => {
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  return days.map(day => ({
+    name: day,
+    value: Math.floor(Math.random() * 50) + 5
+  }));
+};
+
+// Generate data for the monthly chart
+const generateMonthlyData = () => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.map(month => ({
+    name: month,
+    value: Math.floor(Math.random() * 500) + 100
+  }));
+};
+
+// Generate data for the radar chart
+const generateRadarData = () => {
+  const skills = [
+    { name: 'MEAN', value: 38 },
+    { name: 'MERN', value: 52 },
+    { name: 'MEVN', value: 61 },
+    { name: 'PERN', value: 45 },
+    { name: 'LAMP', value: 30 },
+    { name: 'Flutter', value: 42 },
+    { name: 'ROR', value: 35 },
+    { name: 'JAVA', value: 48 },
+    { name: 'React Native', value: 65 },
+    { name: 'Serverless', value: 39 },
+    { name: 'DevOps', value: 55 },
+    { name: 'Python', value: 63 }
+  ];
+  return skills;
+};
+
 const availableTagsData = [
   "JavaScript", "React", "CSS", "HTML", "TypeScript", 
   "Node.js", "Python", "Design", "Productivity", "Tools",
   "API", "Backend", "Frontend", "Mobile", "Web", "UI/UX",
   "Database", "Performance", "Security", "DevOps"
+];
+
+// Status metrics data
+const statusMetrics = [
+  { name: "Total", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-primary/20 to-primary/10" },
+  { name: "Prospect", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-prospect to-status-prospect/70" },
+  { name: "Cold", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-cold to-status-cold/70" },
+  { name: "Warm", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-warm to-status-warm/70" },
+  { name: "Hot", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-hot to-status-hot/70" },
+  { name: "Rejected", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-rejected to-status-rejected/70" },
+  { name: "Hired", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-hired to-status-hired/70" },
+  { name: "Closed", count: 281, change: "+5% than last week", color: "bg-gradient-to-r from-status-closed to-status-closed/70" }
 ];
 
 const Dashboard = () => {
@@ -42,7 +93,10 @@ const Dashboard = () => {
     to: new Date()
   });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [chartData, setChartData] = useState(generateChartData(30));
+  const [chartData] = useState(generateChartData(30));
+  const [weeklyData] = useState(generateWeeklyData());
+  const [monthlyData] = useState(generateMonthlyData());
+  const [radarData] = useState(generateRadarData());
   
   // Filter data based on date range
   const filteredData = chartData.filter(item => {
@@ -64,7 +118,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <SearchTags onSearch={handleSearch} />
+          <SearchTags onSearch={handleSearch} placeholder="Search dashboard..." />
           <div className="flex flex-wrap gap-3">
             <FilterTags 
               availableTags={availableTagsData}
@@ -90,10 +144,11 @@ const Dashboard = () => {
         </div>
       )}
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Tags</CardTitle>
+            <TagIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1,284</div>
@@ -105,6 +160,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Tags</CardTitle>
+            <TagIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">863</div>
@@ -115,7 +171,8 @@ const Dashboard = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Engagement</CardTitle>
+            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24.8k</div>
@@ -127,6 +184,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">New Tags</CardTitle>
+            <PlusCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">147</div>
@@ -139,20 +197,44 @@ const Dashboard = () => {
       
       <div className="grid gap-6 md:grid-cols-2">
         <InteractiveChart 
-          title="Tag Engagement Over Time"
-          data={filteredData}
-          type="area"
-          color="#8B5CF6"
-          additionalDataKeys={["engagement"]}
+          title="Website Views"
+          data={weeklyData}
+          type="bar"
+          color="#0ea5e9"
         />
         <InteractiveChart 
-          title="Tag Distribution"
-          data={filteredData}
-          type="bar"
-          color="#F97316"
+          title="Completed Tasks"
+          data={monthlyData}
+          type="line"
+          color="#0ea5e9"
         />
       </div>
       
+      <div className="grid gap-6 grid-cols-1">
+        <InteractiveChart 
+          title="Tag Engagement Over Time"
+          data={filteredData}
+          type="area"
+          color="#0ea5e9"
+          additionalDataKeys={["engagement"]}
+          className="h-full"
+        />
+      </div>
+
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+        {statusMetrics.map((metric) => (
+          <Card key={metric.name} className={cn("overflow-hidden", metric.color)}>
+            <CardContent className="p-6">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-medium text-muted-foreground">{metric.name}</h3>
+                <div className="text-2xl font-bold">{metric.count}</div>
+                <p className="text-xs text-primary">{metric.change}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+            
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="col-span-2">
           <CardHeader>
@@ -176,7 +258,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="font-medium text-right">{item.value}</div>
-                  <div className="ml-2 text-sm text-green-500">
+                  <div className="ml-2 text-sm text-emerald-500">
                     {item.change}
                   </div>
                 </div>

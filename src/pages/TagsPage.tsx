@@ -22,6 +22,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Edit, File, MoreHorizontal, Tag as TagIcon, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import TagManager from "@/components/TagManager";
 
 // Sample data for demonstration
 const availableTagsData = [
@@ -32,16 +42,126 @@ const availableTagsData = [
 ];
 
 const tagsData = [
-  { id: 1, name: "JavaScript", count: 245, engagement: 87, growth: "+12%" },
-  { id: 2, name: "React", count: 198, engagement: 75, growth: "+9%" },
-  { id: 3, name: "TypeScript", count: 176, engagement: 63, growth: "+23%" },
-  { id: 4, name: "CSS", count: 154, engagement: 52, growth: "+4%" },
-  { id: 5, name: "HTML", count: 142, engagement: 49, growth: "+2%" },
-  { id: 6, name: "Node.js", count: 138, engagement: 48, growth: "+7%" },
-  { id: 7, name: "Python", count: 123, engagement: 43, growth: "+15%" },
-  { id: 8, name: "Design", count: 112, engagement: 39, growth: "+5%" },
-  { id: 9, name: "Productivity", count: 98, engagement: 34, growth: "+8%" },
-  { id: 10, name: "Tools", count: 87, engagement: 30, growth: "+6%" },
+  { 
+    id: 1, 
+    name: "JavaScript", 
+    color: "blue",
+    count: 245, 
+    engagement: 87, 
+    growth: "+12%", 
+    type: "personal", 
+    visibility: "private", 
+    createdBy: "John Doe", 
+    createdAt: "2023-04-15" 
+  },
+  { 
+    id: 2, 
+    name: "React", 
+    color: "purple",
+    count: 198, 
+    engagement: 75, 
+    growth: "+9%", 
+    type: "team", 
+    visibility: "shared", 
+    createdBy: "Jane Smith", 
+    createdAt: "2023-04-18" 
+  },
+  { 
+    id: 3, 
+    name: "TypeScript", 
+    color: "blue",
+    count: 176, 
+    engagement: 63, 
+    growth: "+23%", 
+    type: "global", 
+    visibility: "public", 
+    createdBy: "Admin", 
+    createdAt: "2023-05-01" 
+  },
+  { 
+    id: 4, 
+    name: "CSS", 
+    color: "green",
+    count: 154, 
+    engagement: 52, 
+    growth: "+4%", 
+    type: "personal", 
+    visibility: "private", 
+    createdBy: "John Doe", 
+    createdAt: "2023-05-05" 
+  },
+  { 
+    id: 5, 
+    name: "HTML", 
+    color: "orange",
+    count: 142, 
+    engagement: 49, 
+    growth: "+2%", 
+    type: "team", 
+    visibility: "shared", 
+    createdBy: "Team Lead", 
+    createdAt: "2023-05-10" 
+  },
+  { 
+    id: 6, 
+    name: "Node.js", 
+    color: "green",
+    count: 138, 
+    engagement: 48, 
+    growth: "+7%", 
+    type: "global", 
+    visibility: "public", 
+    createdBy: "Admin", 
+    createdAt: "2023-05-15" 
+  },
+  { 
+    id: 7, 
+    name: "Python", 
+    color: "yellow",
+    count: 123, 
+    engagement: 43, 
+    growth: "+15%", 
+    type: "personal", 
+    visibility: "private", 
+    createdBy: "John Doe", 
+    createdAt: "2023-05-20" 
+  },
+  { 
+    id: 8, 
+    name: "Design", 
+    color: "purple",
+    count: 112, 
+    engagement: 39, 
+    growth: "+5%", 
+    type: "team", 
+    visibility: "shared", 
+    createdBy: "Design Team", 
+    createdAt: "2023-05-25" 
+  },
+  { 
+    id: 9, 
+    name: "Productivity", 
+    color: "gray",
+    count: 98, 
+    engagement: 34, 
+    growth: "+8%", 
+    type: "global", 
+    visibility: "public", 
+    createdBy: "Admin", 
+    createdAt: "2023-06-01" 
+  },
+  { 
+    id: 10, 
+    name: "Tools", 
+    color: "gray",
+    count: 87, 
+    engagement: 30, 
+    growth: "+6%", 
+    type: "personal", 
+    visibility: "private", 
+    createdBy: "John Doe", 
+    createdAt: "2023-06-05" 
+  },
 ];
 
 const TagsPage = () => {
@@ -51,6 +171,8 @@ const TagsPage = () => {
     to: new Date()
   });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState<any>(null);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -60,13 +182,18 @@ const TagsPage = () => {
   const handleDateRangeChange = (range: DateRange | undefined) => {
     setDateRange(range);
   };
+
+  const handleEditTag = (tag: any) => {
+    setSelectedTag(tag);
+    setIsTagManagerOpen(true);
+  };
   
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">Tags</h1>
         <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <SearchTags onSearch={handleSearch} />
+          <SearchTags onSearch={handleSearch} placeholder="Search tags..." />
           <div className="flex flex-wrap gap-3">
             <FilterTags 
               availableTags={availableTagsData}
@@ -98,25 +225,61 @@ const TagsPage = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">ID</TableHead>
-                  <TableHead>Tag Name</TableHead>
+                  <TableHead className="w-[60px]">ID</TableHead>
+                  <TableHead>Tag</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Visibility</TableHead>
                   <TableHead className="text-right">Count</TableHead>
                   <TableHead className="text-right">Engagement</TableHead>
                   <TableHead className="text-right">Growth</TableHead>
+                  <TableHead className="text-right">Created By</TableHead>
+                  <TableHead className="text-right">Created At</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tagsData.map((tag) => (
-                  <TableRow key={tag.id}>
+                  <TableRow key={tag.id} className="hover:bg-muted/30">
                     <TableCell className="font-medium">{tag.id}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-medium">
+                      <span className={cn("tag", `tag-${tag.color}`)}>
                         {tag.name}
-                      </Badge>
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{tag.type}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{tag.visibility}</Badge>
                     </TableCell>
                     <TableCell className="text-right">{tag.count}</TableCell>
                     <TableCell className="text-right">{tag.engagement}</TableCell>
-                    <TableCell className="text-right text-green-500">{tag.growth}</TableCell>
+                    <TableCell className="text-right text-emerald-500">{tag.growth}</TableCell>
+                    <TableCell className="text-right">{tag.createdBy}</TableCell>
+                    <TableCell className="text-right">{tag.createdAt}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal size={16} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEditTag(tag)}>
+                            <Edit size={14} className="mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <File size={14} className="mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive">
+                            <Trash2 size={14} className="mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -144,6 +307,24 @@ const TagsPage = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+
+      {selectedTag && (
+        <TagManager
+          isOpen={isTagManagerOpen}
+          onClose={() => {
+            setIsTagManagerOpen(false);
+            setSelectedTag(null);
+          }}
+          editMode={true}
+          tagData={{
+            name: selectedTag.name,
+            description: "",
+            color: selectedTag.color,
+            type: selectedTag.type,
+            visibility: selectedTag.visibility
+          }}
+        />
+      )}
     </div>
   );
 };

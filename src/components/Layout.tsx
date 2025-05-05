@@ -3,11 +3,15 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Plus, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RightSidebar from "./RightSidebar";
+import TagManager from "./TagManager";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -52,11 +56,39 @@ const Layout = () => {
           </Button>
           <div className="flex-1 flex items-center justify-between">
             <h1 className="text-lg font-semibold md:text-xl">Tag Tapestry</h1>
+            
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon" onClick={() => setIsTagManagerOpen(true)}>
+                <Plus size={18} />
+              </Button>
+              <Button variant="outline" size="icon" onClick={() => setIsFilterOpen(true)}>
+                <Bell size={18} />
+              </Button>
+              <Button
+                variant="default"
+                className="hidden md:flex"
+                onClick={() => setIsTagManagerOpen(true)}
+              >
+                Create Tag
+              </Button>
+            </div>
           </div>
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           <Outlet />
         </main>
+        
+        <RightSidebar 
+          isOpen={isFilterOpen} 
+          onClose={() => setIsFilterOpen(false)} 
+          type="filter"
+          title="Filters"
+        />
+        
+        <TagManager
+          isOpen={isTagManagerOpen}
+          onClose={() => setIsTagManagerOpen(false)}
+        />
       </div>
     </div>
   );
