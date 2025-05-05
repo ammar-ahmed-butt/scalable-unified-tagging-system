@@ -63,8 +63,8 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
   };
 
   // Function to handle chart point hover/click
-  // Updated to handle MouseEvent properly
-  const handlePointClick = (event: React.MouseEvent<SVGElement>, payload: any) => {
+  // Fixed to use the correct activeDot prop for recharts
+  const handlePointClick = (payload: any) => {
     if (payload && payload.payload) {
       setActivePoint(payload.payload);
       console.log("Chart point clicked:", payload.payload);
@@ -118,7 +118,10 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
                 stroke={color}
                 fillOpacity={1}
                 fill="url(#colorValue)"
-                activeDot={{ onClick: handlePointClick, r: 6 }}
+                activeDot={{ 
+                  onClick: handlePointClick,
+                  r: 6 
+                }}
               />
               {additionalDataKeys.map((key, index) => (
                 <Area
@@ -128,7 +131,10 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
                   stroke={colors[index % colors.length]}
                   fillOpacity={1}
                   fill={`url(#color${key})`}
-                  activeDot={{ onClick: handlePointClick, r: 6 }}
+                  activeDot={{ 
+                    onClick: handlePointClick,
+                    r: 6 
+                  }}
                 />
               ))}
             </AreaChart>
@@ -203,7 +209,10 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
                 type="monotone"
                 dataKey="value"
                 stroke={color}
-                activeDot={{ onClick: handlePointClick, r: 6 }}
+                activeDot={{ 
+                  onClick: handlePointClick,
+                  r: 6 
+                }}
                 strokeWidth={2}
               />
               {additionalDataKeys.map((key, index) => (
@@ -212,7 +221,10 @@ const InteractiveChart: React.FC<InteractiveChartProps> = ({
                   type="monotone"
                   dataKey={key}
                   stroke={colors[index % colors.length]}
-                  activeDot={{ onClick: handlePointClick, r: 6 }}
+                  activeDot={{ 
+                    onClick: handlePointClick,
+                    r: 6 
+                  }}
                   strokeWidth={2}
                 />
               ))}
