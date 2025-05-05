@@ -195,3 +195,19 @@
 .dark .chart-card {
   @apply bg-card/90;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid {
+    @apply gap-4;
+  }
+  
+  .card {
+    @apply p-3;
+  }
+}
+
+/* Fix layout issues */
+.flex-1 {
+  min-width: 0;
+}

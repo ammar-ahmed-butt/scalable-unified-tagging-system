@@ -16,7 +16,7 @@ const Layout = () => {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:block">
+      <div className="hidden md:block h-screen sticky top-0">
         <Sidebar />
       </div>
 
@@ -43,7 +43,7 @@ const Layout = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-screen md:ml-16 lg:ml-64">
+      <div className="flex-1 flex flex-col min-h-screen">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
           <Button
             variant="ghost"

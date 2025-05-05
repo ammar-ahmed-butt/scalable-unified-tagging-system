@@ -17,11 +17,13 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const { colorScheme } = useTheme();
 
   useEffect(() => {
     const handleResize = () => {
@@ -57,7 +59,7 @@ const Sidebar = () => {
   return (
     <div
       className={cn(
-        "h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col z-40 fixed md:sticky top-0 left-0",
+        "h-full bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col z-40 sticky top-0",
         collapsed ? "w-16" : "w-64"
       )}
     >
