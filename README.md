@@ -2,15 +2,14 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/e7817d43-f4c4-41d0-a193-802cb8d50e20
+**URL**: https://scalable-unified-tagging-system.lovable.app/
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
 **Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/e7817d43-f4c4-41d0-a193-802cb8d50e20) and start prompting.
+👉🏻 Click here to [View](https://scalable-unified-tagging-system.lovable.app/)
 
 Changes made via Lovable will be committed automatically to this repo.
 
