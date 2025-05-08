@@ -19,7 +19,11 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
 
-const Sidebar = () => {
+interface SidebarProps {
+  onNavItemClick?: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onNavItemClick }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
@@ -40,6 +44,12 @@ const Sidebar = () => {
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleNavItemClick = () => {
+    if (onNavItemClick && isMobile) {
+      onNavItemClick();
+    }
   };
 
   const navItems = [
@@ -102,6 +112,7 @@ const Sidebar = () => {
                             : "text-sidebar-foreground hover:bg-sidebar-accent/50",
                           collapsed ? "justify-center" : "justify-start"
                         )}
+                        onClick={handleNavItemClick}
                       >
                         <item.icon size={20} />
                         {!collapsed && <span className="ml-3">{item.label}</span>}
@@ -135,6 +146,7 @@ const Sidebar = () => {
                             : "text-sidebar-foreground hover:bg-sidebar-accent/50",
                           collapsed ? "justify-center" : "justify-start"
                         )}
+                        onClick={handleNavItemClick}
                       >
                         <item.icon size={20} />
                         {!collapsed && <span className="ml-3">{item.label}</span>}

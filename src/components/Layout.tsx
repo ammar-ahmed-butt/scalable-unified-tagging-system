@@ -13,6 +13,11 @@ const Layout = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
 
+  // Function to close the sidebar
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar for larger screens */}
@@ -34,12 +39,12 @@ const Layout = () => {
         />
         <div
           className={cn(
-            "h-full transition-transform duration-300",
+            "h-full w-3/4 max-w-sm transition-transform duration-300",
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           )}
           onClick={(e) => e.stopPropagation()}
         >
-          <Sidebar />
+          <Sidebar onNavItemClick={closeSidebar} />
         </div>
       </div>
 
