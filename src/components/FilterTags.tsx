@@ -10,12 +10,14 @@ interface FilterTagsProps {
   availableTags: string[];
   selectedTags: string[];
   onTagsChange: (tags: string[]) => void;
+  className?: string; // Added className as an optional prop
 }
 
 const FilterTags: React.FC<FilterTagsProps> = ({
   availableTags,
   selectedTags,
   onTagsChange,
+  className,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
@@ -25,7 +27,7 @@ const FilterTags: React.FC<FilterTagsProps> = ({
   };
   
   return (
-    <div className="flex flex-wrap gap-2 items-center">
+    <div className={`flex flex-wrap gap-2 items-center ${className || ''}`}>
       <Button
         variant="outline"
         className="flex items-center gap-2"
