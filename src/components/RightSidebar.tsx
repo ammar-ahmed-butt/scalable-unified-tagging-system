@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DateRangePicker } from "./DateRangePicker";
 import { DateRange } from "react-day-picker";
-import FilterTags from "./FilterTags";
+import FilterTags, { FilterTagsProps } from "./FilterTags";
 
 interface RightSidebarProps {
   isOpen: boolean;

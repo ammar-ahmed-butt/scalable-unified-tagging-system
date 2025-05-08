@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import RightSidebar from "./RightSidebar";
 import TagManager from "./TagManager";
 
-interface FilterTagsProps {
+export interface FilterTagsProps {
   availableTags: string[];
   selectedTags: string[];
   onTagsChange: (tags: string[]) => void;
