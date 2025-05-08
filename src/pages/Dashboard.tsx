@@ -1,8 +1,6 @@
 
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import SearchTags from "@/components/SearchTags";
-import { DateRangePicker } from "@/components/DateRangePicker";
 import FilterTags from "@/components/FilterTags";
 import InteractiveChartWrapper from "@/components/InteractiveChartWrapper";
 import SpiderChart from "@/components/SpiderChart";
@@ -84,13 +82,12 @@ const statusMetrics = [
 ];
 
 const Dashboard = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [chartData] = useState(generateChartData(30));
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(new Date().setDate(new Date().getDate() - 7)),
     to: new Date()
   });
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [chartData] = useState(generateChartData(30));
   const [weeklyData] = useState(generateWeeklyData());
   const [monthlyData] = useState(generateMonthlyData());
   const [radarData] = useState(generateRadarData());
@@ -100,36 +97,9 @@ const Dashboard = () => {
     if (!dateRange?.from || !dateRange?.to) return true;
     return item.dateObj >= dateRange.from && item.dateObj <= dateRange.to;
   });
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // In a real app, you would filter data based on the search query
-  };
-  
-  const handleDateRangeChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <SearchTags onSearch={handleSearch} placeholder="Search dashboard..." />
-          <div className="flex flex-wrap gap-3">
-            <FilterTags 
-              availableTags={availableTagsData}
-              selectedTags={selectedTags}
-              onTagsChange={setSelectedTags}
-            />
-            <DateRangePicker
-              dateRange={dateRange}
-              onDateRangeChange={handleDateRangeChange}
-            />
-          </div>
-        </div>
-      </div>
-      
       {selectedTags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <span className="text-sm font-medium text-muted-foreground">Active filters:</span>

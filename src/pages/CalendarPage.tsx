@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
-import SearchTags from "@/components/SearchTags";
-import { DateRangePicker } from "@/components/DateRangePicker";
 import FilterTags from "@/components/FilterTags";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
@@ -46,22 +44,12 @@ const generateEvents = () => {
 const events = generateEvents();
 
 const CalendarPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(new Date().setDate(new Date().getDate() - 7)),
     to: new Date()
   });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // In a real app, you would filter data based on the search query
-  };
-  
-  const handleDateRangeChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
   
   // Filter events for the selected date
   const selectedDateEvents = selectedDate 
@@ -79,23 +67,16 @@ const CalendarPage = () => {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
-        <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <SearchTags onSearch={handleSearch} />
-          <div className="flex flex-wrap gap-3">
-            <FilterTags 
-              availableTags={availableTagsData}
-              selectedTags={selectedTags}
-              onTagsChange={setSelectedTags}
-            />
-            <DateRangePicker
-              dateRange={dateRange}
-              onDateRangeChange={handleDateRangeChange}
-            />
-          </div>
+      {selectedTags.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
+          {selectedTags.map(tag => (
+            <Badge key={tag} variant="secondary">
+              {tag}
+            </Badge>
+          ))}
         </div>
-      </div>
+      )}
       
       <div className="grid gap-6 md:grid-cols-2">
         <Card>

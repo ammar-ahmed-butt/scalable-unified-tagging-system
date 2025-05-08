@@ -1,8 +1,6 @@
 
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import SearchTags from "@/components/SearchTags";
-import { DateRangePicker } from "@/components/DateRangePicker";
 import FilterTags from "@/components/FilterTags";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -165,7 +163,6 @@ const tagsData = [
 ];
 
 const TagsPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(new Date().setDate(new Date().getDate() - 7)),
     to: new Date()
@@ -174,15 +171,6 @@ const TagsPage = () => {
   const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<any>(null);
   
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // In a real app, you would filter data based on the search query
-  };
-  
-  const handleDateRangeChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
-
   const handleEditTag = (tag: any) => {
     setSelectedTag(tag);
     setIsTagManagerOpen(true);
@@ -190,24 +178,6 @@ const TagsPage = () => {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Tags</h1>
-        <div className="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <SearchTags onSearch={handleSearch} placeholder="Search tags..." />
-          <div className="flex flex-wrap gap-3">
-            <FilterTags 
-              availableTags={availableTagsData}
-              selectedTags={selectedTags}
-              onTagsChange={setSelectedTags}
-            />
-            <DateRangePicker
-              dateRange={dateRange}
-              onDateRangeChange={handleDateRangeChange}
-            />
-          </div>
-        </div>
-      </div>
-      
       {selectedTags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
